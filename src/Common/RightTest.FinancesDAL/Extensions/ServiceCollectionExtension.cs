@@ -6,7 +6,7 @@ namespace RightTest.FinancesDAL.Extensions;
 
 public static class ServiceCollectionExtension
 {
-    public static void AddInfrastructure(this IServiceCollection services, string connectionString)
+    public static void AddFinancesInfrastructure(this IServiceCollection services, string connectionString)
     {
         services.AddDbContext<FinancesContext>(options =>
         {

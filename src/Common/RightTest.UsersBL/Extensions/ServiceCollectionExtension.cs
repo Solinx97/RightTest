@@ -12,6 +12,6 @@ public static class ServiceCollectionExtension
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(RegistrationCommand).Assembly));
 
-        services.AddInfrastructure(section, connectionString);
+        services.AddUsersInfrastructure(section, connectionString);
     }
 }

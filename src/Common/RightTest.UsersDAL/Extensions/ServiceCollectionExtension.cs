@@ -11,7 +11,7 @@ namespace RightTest.UsersDAL.Extensions;
 
 public static class ServiceCollectionExtension
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfigurationSection section, string connectionString)
+    public static void AddUsersInfrastructure(this IServiceCollection services, IConfigurationSection section, string connectionString)
     {
         services.AddDbContext<AppUsersContext>(options =>
         {
@@ -24,5 +24,16 @@ public static class ServiceCollectionExtension
         services.Configure<JWT>(section);
 
         services.AddScoped<IUserRepository, UserRepository>();
+    }
+
+    public static void AddUsersInfrastructure(this IServiceCollection services, string connectionString)
+    {
+        services.AddDbContext<AppUsersContext>(options =>
+        {
+            options.UseNpgsql(connectionString);
+        });
+
+        services.AddIdentityCore<AppUser>()
+            .AddEntityFrameworkStores<AppUsersContext>();
     }
 }

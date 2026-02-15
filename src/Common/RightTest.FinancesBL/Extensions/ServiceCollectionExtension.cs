@@ -11,6 +11,6 @@ public static class ServiceCollectionExtension
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(CreateCurrencyCommand).Assembly));
 
-        services.AddInfrastructure(connectionString);
+        services.AddFinancesInfrastructure(connectionString);
     }
 }
