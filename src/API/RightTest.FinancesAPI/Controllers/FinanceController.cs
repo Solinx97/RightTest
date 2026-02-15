@@ -13,7 +13,7 @@ namespace RightTest.FinancesAPI.Controllers;
 
 [Route("api/v1/[controller]")]
 [ApiController]
-public class FinancesController(IMediator mediator) : ControllerBase
+public class FinanceController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
 
