@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RightTest.FinancesAPI.Models;
 using RightTest.FinancesBL.Commands.CreateCurrency;
@@ -13,6 +14,7 @@ namespace RightTest.FinancesAPI.Controllers;
 
 [Route("api/v1/[controller]")]
 [ApiController]
+[Authorize]
 public class FinanceController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;

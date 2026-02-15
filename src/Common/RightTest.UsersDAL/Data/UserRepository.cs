@@ -44,16 +44,20 @@ internal class UserRepository(UserManager<AppUser> userManager, IOptions<JWT> jw
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.Name)
+            new Claim(ClaimTypes.Email, user.Name),
+            new Claim("scopes", _jwt.Scopes)
         };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
+            issuer: _jwt.Issuer,
+            audience: _jwt.Audiences,
             claims: claims,
             expires: DateTime.Now.AddHours(3),
-            signingCredentials: creds);
+            signingCredentials: creds
+            );
 
         var result = new JwtSecurityTokenHandler().WriteToken(token);
 
