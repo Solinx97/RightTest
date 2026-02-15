@@ -1,6 +1,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RightTest.FinancesAPI.Consts;
+using RightTest.FinancesAPI.Services;
 using RightTest.FinancesBL.Extensions;
 using Serilog;
 using Serilog.Events;
@@ -8,8 +9,12 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
 var connection = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
 builder.Services.AddMediatorSource(connection);
+
+builder.Services.AddHostedService<CurrencyService>();
 
 var jwt = new JWT();
 builder.Configuration.Bind("JWT", jwt);
