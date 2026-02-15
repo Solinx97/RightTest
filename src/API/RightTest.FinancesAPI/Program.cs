@@ -17,23 +17,18 @@ var authenticationOptions = new Authentication();
 builder.Configuration.Bind("Authentication", authenticationOptions);
 var authenticationClientOptions = new AuthenticationClient();
 builder.Configuration.Bind("Authentication:Client", authenticationClientOptions);
-var audiences = authenticationClientOptions.Audiences.Split(',');
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
     {
-        options.Authority = authenticationOptions.Authority;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
             ValidateIssuer = true,
             ValidIssuer = authenticationOptions.Issuer,
-            ValidateAudience = true,
-            ValidAudiences = audiences,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+            ValidateAudience = false,
             ClockSkew = TimeSpan.Zero
         };
-        // Skip checking HTTPS (should be HTTPS in production)
-        options.RequireHttpsMetadata = false;
     });
 
 builder.Services.AddAuthorizationBuilder()
