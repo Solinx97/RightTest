@@ -9,7 +9,7 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ASPNETCORE_ENVIRONMENT: Development
-      JWT__Key: Ibhja8vSTKQkydr0pImpjnCqx++8mwtAmYGpBvxxKvNn6m53nizbvgt52jEzBcJeXrhaGYovIPtAKj+3ecmQkA==
+      JWT__Key: <key>
     depends_on:
       - financesapi
       - usersapi
@@ -25,7 +25,7 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=Finances;Username=postgres;Password=124124
+      ConnectionStrings__DefaultConnection: <db-connection>
     depends_on:
       - db
 
@@ -39,8 +39,8 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=Users;Username=postgres;Password=124124
-      JWT__Key: Ibhja8vSTKQkydr0pImpjnCqx++8mwtAmYGpBvxxKvNn6m53nizbvgt52jEzBcJeXrhaGYovIPtAKj+3ecmQkA==
+      ConnectionStrings__DefaultConnection: <db-connection>
+      JWT__Key: <key>
       JWT__ValidHours: 24
     depends_on:
       - db
@@ -55,8 +55,8 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__FinancesConnection: Host=db;Port=5432;Database=Finances;Username=postgres;Password=124124
-      ConnectionStrings__UsersConnection: Host=db;Port=5432;Database=Users;Username=postgres;Password=124124
+      ConnectionStrings__FinancesConnection: <db-connection>
+      ConnectionStrings__UsersConnection: <db-connection>
     depends_on:
       - db
 
