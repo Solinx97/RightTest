@@ -1,4 +1,5 @@
 using APIGateway.Consts;
+using APIGateway.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
@@ -13,8 +14,8 @@ builder.Services.AddReverseProxy()
         builderContext.AddRequestHeader("X-Forwarded-Host", "ApiGateway");
     });
 
-var jwt = new JWT();
-builder.Configuration.Bind("JWT", jwt);
+var jwtOptions = new JWTOptions();
+builder.Configuration.Bind("JWT", jwtOptions);
 var authenticationOptions = new Authentication();
 builder.Configuration.Bind("Authentication", authenticationOptions);
 var authenticationClientOptions = new AuthenticationClient();
@@ -31,7 +32,7 @@ builder.Services.AddAuthentication("Bearer")
             ValidIssuer = authenticationOptions.Issuer,
             ValidateAudience = true,
             ValidAudiences = audiences,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
             ClockSkew = TimeSpan.Zero
         };
     });

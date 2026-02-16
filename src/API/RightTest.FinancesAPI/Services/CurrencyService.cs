@@ -18,29 +18,34 @@ public class CurrencyService(IServiceScopeFactory scopeFactory, ILogger<Currency
 
         while (!ct.IsCancellationRequested)
         {
-            try
-            {
-                using var scope = _scopeFactory.CreateScope();
-
-                var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-
-                var valutes = await _externalService.GrabDataAsync(ct);
-                foreach (var valute in valutes)
-                {
-                    await FillDatabaseTableAsync(mediator, valute, ct);
-                }
-
-                _logger.LogInformation("Data received.");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error while grabbing data");
-            }
-
-            await Task.Delay(TimeSpan.FromSeconds(30), ct);
+            await RunDatabaseUpdate(ct);
         }
 
         _logger.LogInformation("DataGrabberWorker stopped.");
+    }
+
+    private async Task RunDatabaseUpdate(CancellationToken ct)
+    {
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+
+            var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+
+            var valutes = await _externalService.GrabDataAsync(ct);
+            foreach (var valute in valutes)
+            {
+                await FillDatabaseTableAsync(mediator, valute, ct);
+            }
+
+            _logger.LogInformation("Data received.");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error while grabbing data");
+        }
+
+        await Task.Delay(TimeSpan.FromSeconds(30), ct);
     }
 
     private static async Task FillDatabaseTableAsync(IMediator mediator, ValuteDto valute, CancellationToken ct)
