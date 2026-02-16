@@ -1,4 +1,5 @@
 using Migrations.Extensions;
+using RightTest.MigrationsAPI.Middlewares;
 using Serilog;
 using Serilog.Events;
 
@@ -31,5 +32,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.Run();

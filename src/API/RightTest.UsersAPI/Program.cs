@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using RightTest.UsersAPI.Middlewares;
 using RightTest.UsersBL.Extensions;
 using Serilog;
 using Serilog.Events;
@@ -41,5 +42,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.Run();

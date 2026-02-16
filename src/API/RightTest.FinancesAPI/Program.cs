@@ -1,6 +1,7 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RightTest.FinancesAPI.Consts;
+using RightTest.FinancesAPI.Middlewares;
 using RightTest.FinancesAPI.Services;
 using RightTest.FinancesBL.Extensions;
 using Serilog;
@@ -102,5 +103,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers().RequireAuthorization("ApiScope");
+
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 app.Run();
