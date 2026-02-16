@@ -6,11 +6,24 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RightTest.FinancesDAL.Migrations
 {
     /// <inheritdoc />
-    public partial class AddFavorite : Migration
+    public partial class Init1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Currency",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Rate = table.Column<decimal>(type: "numeric", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Currency", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Favorite",
                 columns: table => new
@@ -41,6 +54,9 @@ namespace RightTest.FinancesDAL.Migrations
         {
             migrationBuilder.DropTable(
                 name: "Favorite");
+
+            migrationBuilder.DropTable(
+                name: "Currency");
         }
     }
 }

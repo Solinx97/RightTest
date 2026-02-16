@@ -12,8 +12,8 @@ using RightTest.FinancesDAL.Persistent;
 namespace RightTest.FinancesDAL.Migrations
 {
     [DbContext(typeof(FinancesContext))]
-    [Migration("20260216112834_AddFavorite")]
-    partial class AddFavorite
+    [Migration("20260216223719_Init1")]
+    partial class Init1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

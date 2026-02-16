@@ -12,8 +12,8 @@ using RightTest.UsersDAL.Persistent;
 namespace RightTest.UsersDAL.Migrations
 {
     [DbContext(typeof(AppUsersContext))]
-    [Migration("20260215105530_Init")]
-    partial class Init
+    [Migration("20260216223958_Init1")]
+    partial class Init1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

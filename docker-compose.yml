@@ -9,7 +9,10 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ASPNETCORE_ENVIRONMENT: Development
-      JWT__Key: <key>
+      JWT__Key: ${JWT_KEY}
+      Authentication__Client__Scopes: api.read,api.write
+      Authentication__Client__Audiences: finances-api,user-api
+      Authentication__Authority: http://usersapi:8080/
     depends_on:
       - financesapi
       - usersapi
@@ -25,7 +28,10 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: <db-connection>
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__FinancesConnection}
+      JWT__Key: ${JWT_KEY}
+      Authentication__Issuer: http://usersapi:8080/
+      Authentication__Client__Scopes: api.read,api.write
     depends_on:
       - db
 
@@ -39,8 +45,11 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__DefaultConnection: <db-connection>
-      JWT__Key: <key>
+      ConnectionStrings__DefaultConnection: ${ConnectionStrings__UsersConnection}
+      JWT__Key: ${JWT_KEY}
+      JWT__Scopes: api.read,api.write
+      JWT__Issuer: http://usersapi:8080/
+      JWT__Audiences: finances-api
       JWT__ValidHours: 24
     depends_on:
       - db
@@ -55,8 +64,8 @@ services:
     environment:
       ASPNETCORE_URLS: http://+:8080
       ASPNETCORE_ENVIRONMENT: Development
-      ConnectionStrings__FinancesConnection: <db-connection>
-      ConnectionStrings__UsersConnection: <db-connection>
+      ConnectionStrings__FinancesConnection: ${ConnectionStrings__FinancesConnection}
+      ConnectionStrings__UsersConnection: ${ConnectionStrings__UsersConnection}
     depends_on:
       - db
 
@@ -66,7 +75,7 @@ services:
     environment:
       POSTGRES_DB: Finances
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 124124
+      POSTGRES_PASSWORD: ${DB__PASSWORD}
     ports:
       - "5432:5432"
     volumes:

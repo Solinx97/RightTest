@@ -35,6 +35,8 @@ builder.Services.AddAuthentication("Bearer")
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
             ClockSkew = TimeSpan.Zero
         };
+        // For Dev env can be disabled. In Prod, it should be enabled
+        options.RequireHttpsMetadata = false;
     });
 
 builder.Services.AddControllers();
