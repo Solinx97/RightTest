@@ -1,19 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using RightTest.UsersDAL.Consts;
 using RightTest.UsersDAL.Entities;
 using RightTest.UsersDAL.Interfaces;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
 
 namespace RightTest.UsersDAL.Data;
 
-internal class UserRepository(UserManager<AppUser> userManager, IOptions<JWT> jwt) : IUserRepository
+internal class UserRepository(UserManager<AppUser> userManager) : IUserRepository
 {
     private readonly UserManager<AppUser> _userManager = userManager;
-    private readonly JWT _jwt = jwt.Value;
 
     public async Task<bool> RegistrationAsync(string username, string password)
     {
@@ -27,7 +20,7 @@ internal class UserRepository(UserManager<AppUser> userManager, IOptions<JWT> jw
         return result.Succeeded;
     }
 
-    public async Task<string> LoginAsync(string username, string password)
+    public async Task<AppUser> LoginAsync(string username, string password)
     {
         var user = await _userManager.FindByNameAsync(username);
         if (user == null || !await _userManager.CheckPasswordAsync(user, password))
@@ -35,32 +28,6 @@ internal class UserRepository(UserManager<AppUser> userManager, IOptions<JWT> jw
             throw new Exception("User not found.");
         }
 
-        var token = GenerateJwtToken(user);
-        return token;
-    }
-
-    private string GenerateJwtToken(AppUser user)
-    {
-        var claims = new[]
-        {
-            new Claim(ClaimTypes.NameIdentifier, user.Id),
-            new Claim(ClaimTypes.Email, user.UserName),
-            new Claim("scopes", _jwt.Scopes)
-        };
-
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwt.Key));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-        var token = new JwtSecurityToken(
-            issuer: _jwt.Issuer,
-            audience: _jwt.Audiences,
-            claims: claims,
-            expires: DateTime.Now.AddHours(3),
-            signingCredentials: creds
-            );
-
-        var result = new JwtSecurityTokenHandler().WriteToken(token);
-
-        return result;
+        return user;
     }
 }

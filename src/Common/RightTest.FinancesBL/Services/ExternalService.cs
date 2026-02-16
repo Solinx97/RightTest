@@ -1,16 +1,19 @@
-﻿using RightTest.FinancesBL.DTOs;
+﻿using Microsoft.Extensions.Options;
+using RightTest.FinancesBL.Options;
+using RightTest.FinancesBL.DTOs;
 using RightTest.FinancesBL.Interfaces;
 using System.Xml.Serialization;
 
 namespace RightTest.FinancesBL.Services;
 
-internal class ExternalService(HttpClient httpClient) : IExternalService
+internal class ExternalService(HttpClient httpClient, IOptions<ServersOptions> serversOptions) : IExternalService
 {
     private readonly HttpClient _httpClient = httpClient;
+    private readonly ServersOptions _serversOptions = serversOptions.Value;
 
     public async Task<IEnumerable<ValuteDto>> GrabDataAsync(CancellationToken ct)
     {
-        var response = await _httpClient.GetAsync("http://www.cbr.ru/scripts/XML_daily.asp", ct);
+        var response = await _httpClient.GetAsync(_serversOptions.ExternalServerUrl, ct);
         response.EnsureSuccessStatusCode();
 
         var stream = await response.Content.ReadAsStreamAsync(ct);

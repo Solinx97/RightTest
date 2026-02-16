@@ -13,7 +13,7 @@ var builder = WebApplication.CreateBuilder(args);
 Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
 var connection = builder.Configuration.GetConnectionString("DefaultConnection") ?? string.Empty;
-builder.Services.AddMediatorSource(connection);
+builder.Services.AddMediatorSource(builder.Configuration.GetSection("Servers"), connection);
 
 builder.Services.AddHostedService<CurrencyService>();
 

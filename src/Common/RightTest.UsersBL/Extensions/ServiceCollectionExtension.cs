@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RightTest.UsersBL.Commands.Registration;
+using RightTest.UsersBL.Interfaces;
+using RightTest.UsersBL.Options;
+using RightTest.UsersBL.Services;
 using RightTest.UsersDAL.Extensions;
 
 namespace RightTest.UsersBL.Extensions;
@@ -12,6 +15,10 @@ public static class ServiceCollectionExtension
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(RegistrationCommand).Assembly));
 
-        services.AddUsersInfrastructure(section, connectionString);
+        services.Configure<JWTOptions>(section);
+
+        services.AddScoped<ITokenService, TokenService>();
+
+        services.AddUsersInfrastructure(connectionString);
     }
 }

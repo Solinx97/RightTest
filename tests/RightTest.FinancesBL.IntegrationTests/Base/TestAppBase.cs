@@ -1,5 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using RightTest.FinancesBL.Extensions;
 using RightTest.FinancesBL.IntegrationTests.Data;
 using RightTest.FinancesDAL.Persistent;
@@ -14,11 +16,20 @@ internal class TestAppBase(PostgresqlFixture fixture) : IAsyncLifetime
 
     public async Task InitializeAsync()
     {
-        var services = new ServiceCollection();
+        var builder = Host.CreateApplicationBuilder();
 
-        services.AddMediatorSource(_fixture.Connection);
+        // load normal app configuration
+        builder.Configuration.AddJsonFile("appsettings.json", optional: true);
+        builder.Configuration.AddUserSecrets<TestAppBase>();
+        builder.Configuration.AddEnvironmentVariables();
 
-        Services = services.BuildServiceProvider();
+        // override connection string for tests
+        builder.Configuration["ConnectionStrings:Default"] = _fixture.Connection;
+
+        builder.Services.AddMediatorSource(builder.Configuration.GetSection("Servers"), _fixture.Connection);
+
+        var host = builder.Build();
+        Services = host.Services;
 
         // apply migrations
         using var scope = Services.CreateScope();

@@ -1,6 +1,6 @@
-﻿namespace RightTest.UsersDAL.Consts;
+﻿namespace RightTest.UsersBL.Options;
 
-public class JWT
+public class JWTOptions
 {
     public string Key { get; set; } = string.Empty;
 
