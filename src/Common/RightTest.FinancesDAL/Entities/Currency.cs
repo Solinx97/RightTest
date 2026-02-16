@@ -1,7 +1,14 @@
 ﻿namespace RightTest.FinancesDAL.Entities;
 
-public record Currency(
-    Guid Id,
-    string Name,
-    decimal Rate
-    );
+public class Currency
+{
+    public Currency() { }
+
+    public Guid Id { get; set; }
+
+    public string Name { get; set; } = string.Empty;
+
+    public decimal Rate { get; set; }
+
+    public List<Favorite> Favorites { get; set; } = [];
+}

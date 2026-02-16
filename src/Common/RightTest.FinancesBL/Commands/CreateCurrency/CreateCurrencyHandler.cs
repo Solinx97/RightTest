@@ -10,7 +10,12 @@ internal class CreateCurrencyHandler(FinancesContext context) : IRequestHandler<
 
     public async Task<Guid> Handle(CreateCurrencyCommand request, CancellationToken cancelationToken)
     {
-        var currency = new Currency(request.Id, request.Name, request.Rate);
+        var currency = new Currency
+        {
+            Id = request.Id,
+            Name = request.Name,
+            Rate = request.Rate,
+        };
 
         await _context.Set<Currency>()
             .AddAsync(currency, cancelationToken);

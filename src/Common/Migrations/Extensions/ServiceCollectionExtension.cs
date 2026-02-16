@@ -10,8 +10,11 @@ public static class ServiceCollectionExtension
 {
     public static void AddMediatorSource(this IServiceCollection services, IConfiguration config)
     {
-        var usersConnection = config.GetConnectionString("UsersConnection") ?? string.Empty;
-        var financesConnection = config.GetConnectionString("FinancesConnection") ?? string.Empty;
+        var usersConnection = config.GetConnectionString("UsersConnection");
+        var financesConnection = config.GetConnectionString("FinancesConnection");
+
+        ArgumentException.ThrowIfNullOrEmpty(usersConnection, nameof(usersConnection));
+        ArgumentException.ThrowIfNullOrEmpty(financesConnection, nameof(financesConnection));
 
         services.AddMediatR(cfg =>
             cfg.RegisterServicesFromAssembly(typeof(ApplyFinancesMigrationsCommand).Assembly));

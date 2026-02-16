@@ -2,12 +2,12 @@
 using Microsoft.Extensions.DependencyInjection;
 using RightTest.FinancesBL.IntegrationTests.Base;
 using RightTest.FinancesBL.IntegrationTests.Data;
-using RightTest.FinancesBL.Queries.GetCurrencyById;
+using RightTest.FinancesBL.Queries.GetUserFavorites;
 
 namespace RightTest.FinancesBL.IntegrationTests.QueryTests;
 
 [Collection("Postgresql Tests")]
-public class GetCurrencyByIdTests(PostgresqlFixture fixture) : IAsyncLifetime
+public class GetUserFavorites(PostgresqlFixture fixture) : IAsyncLifetime
 {
     private readonly PostgresqlFixture _fixture = fixture;
 
@@ -29,20 +29,20 @@ public class GetCurrencyByIdTests(PostgresqlFixture fixture) : IAsyncLifetime
     {
         using var context = _fixture.CreateContext();
 
-        var id = Guid.Parse("b081ad51-1aec-4094-89f6-312115173933");
-        var name = "BYN";
-        var rate = 2.11m;
+        var currencyId = Guid.Parse("b081ad51-1aec-4094-89f6-412115173933");
+        var appUserId = "1d374a14-ce2f-45a2-98c3-0c18e61f0ec9";
 
         // Arrange
-        await PostgresqlFixture.SeedCurrencyTestDataAsync(context, id);
+        await PostgresqlFixture.SeedCurrencyTestDataAsync(context, currencyId);
+        await PostgresqlFixture.SeedFavoriteTestDataAsync(context, Guid.NewGuid(), currencyId, appUserId);
 
         // Act
-        var currency = await _mediator.Send(new GetCurrencyByIdQuery(id));
+        var currencies = await _mediator.Send(new GetUserFavoritesQuery(appUserId));
 
         // Assert
-        Assert.NotNull(currency);
-        Assert.Equal(currency.Id, id);
-        Assert.Equal(currency.Name, name);
-        Assert.Equal(currency.Rate, rate);
+        Assert.NotNull(currencies);
+        Assert.NotEmpty(currencies);
+        Assert.Single(currencies);
+        Assert.Equal(currencies.First().Id, currencyId);
     }
 }

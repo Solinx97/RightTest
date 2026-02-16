@@ -41,7 +41,12 @@ public class PostgresqlFixture : IAsyncLifetime
     public static async Task SeedCurrencyTestDataAsync(FinancesContext context, Guid id)
     {
         await context.Set<Currency>().AddAsync(
-            new Currency(id, "BYN", 2.11m)
+            new Currency
+            {
+                Id = id,
+                Name = "BYN",
+                Rate = 2.11m,
+            }
         );
 
         await context.SaveChangesAsync();
@@ -52,9 +57,28 @@ public class PostgresqlFixture : IAsyncLifetime
         for (int i = 0; i < length; i++)
         {
             await context.Set<Currency>().AddAsync(
-                new Currency(Guid.NewGuid(), isSameName ? "BYN" : "BYN" + i, isSameRate ? 2.11m : 2.11m + i + 1)
+                new Currency
+                {
+                    Id = Guid.NewGuid(),
+                    Name = isSameName ? "BYN" : "BYN" + i,
+                    Rate = isSameRate ? 2.11m : 2.11m + i + 1,
+                }
             );
         }
+
+        await context.SaveChangesAsync();
+    }
+
+    public static async Task SeedFavoriteTestDataAsync(FinancesContext context, Guid id, Guid currencyId, string appUserId)
+    {
+        await context.Set<Favorite>().AddAsync(
+            new Favorite
+            {
+                Id = id,
+                CurrencyId = currencyId,
+                AppUserId = appUserId,
+            }
+        );
 
         await context.SaveChangesAsync();
     }

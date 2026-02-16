@@ -2,13 +2,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using RightTest.FinancesAPI.Models;
-using RightTest.FinancesBL.Commands.CreateCurrency;
+using RightTest.FinancesBL.Commands.AddFavorite;
 using RightTest.FinancesBL.Commands.DeleteCurrency;
 using RightTest.FinancesBL.Commands.UpdateCurrencyName;
 using RightTest.FinancesBL.Commands.UpdateCurrencyRate;
 using RightTest.FinancesBL.Queries.GetCurrencyById;
 using RightTest.FinancesBL.Queries.GetCurrencyByName;
 using RightTest.FinancesBL.Queries.GetCurrencyByRate;
+using RightTest.FinancesBL.Queries.GetUserFavorites;
 
 namespace RightTest.FinancesAPI.Controllers;
 
@@ -19,8 +20,25 @@ public class FinanceController(IMediator mediator) : ControllerBase
 {
     private readonly IMediator _mediator = mediator;
 
+    [HttpPost]
+    public async Task<IActionResult> AddFavorite([FromBody] FavoriteModel favorite, CancellationToken cancellationToken)
+    {
+        var createCommand = new AddFavoriteCommand(favorite.Id, favorite.CurrencyId, favorite.AppUserId);
+        var id = await _mediator.Send(createCommand, cancellationToken);
+
+        return Ok(id);
+    }
+
+    [HttpGet("getByUser")]
+    public async Task<IActionResult> GetByUser(string appUserId, CancellationToken cancellationToken)
+    {
+        var currencies = await _mediator.Send(new GetUserFavoritesQuery(appUserId), cancellationToken);
+
+        return Ok(currencies);
+    }
+
     [HttpGet("getByName")]
-    public async Task<IActionResult> GetCurrencyByName(string name, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByName(string name, CancellationToken cancellationToken)
     {
         var currencies = await _mediator.Send(new GetCurrencyByNameQuery(name), cancellationToken);
 
@@ -28,7 +46,7 @@ public class FinanceController(IMediator mediator) : ControllerBase
     }
 
     [HttpGet("getByRate")]
-    public async Task<IActionResult> GetCurrencyByRate(decimal rate, CancellationToken cancellationToken)
+    public async Task<IActionResult> GetByRate(decimal rate, CancellationToken cancellationToken)
     {
         var currencies = await _mediator.Send(new GetCurrencyByRateQuery(rate), cancellationToken);
 
@@ -41,15 +59,6 @@ public class FinanceController(IMediator mediator) : ControllerBase
         var currencies = await _mediator.Send(new GetCurrencyByIdQuery(id), cancellationToken);
 
         return Ok(currencies);
-    }
-
-    [HttpPost]
-    public async Task<IActionResult> Create([FromBody] CurrencyModel currency, CancellationToken cancellationToken)
-    {
-        var createCommand = new CreateCurrencyCommand(currency.Id, currency.Name, currency.Rate);
-        var id = await _mediator.Send(createCommand, cancellationToken);
-
-        return Ok(id);
     }
 
     [HttpPatch("updateName/{id}")]
