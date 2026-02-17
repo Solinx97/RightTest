@@ -1,6 +1,6 @@
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using RightTest.FinancesAPI.Consts;
+using RightTest.FinancesAPI.Options;
 using RightTest.FinancesAPI.Middlewares;
 using RightTest.FinancesAPI.Services;
 using RightTest.FinancesBL.Extensions;
@@ -17,11 +17,11 @@ builder.Services.AddMediatorSource(builder.Configuration.GetSection("Servers"), 
 
 builder.Services.AddHostedService<CurrencyService>();
 
-var jwt = new JWT();
-builder.Configuration.Bind("JWT", jwt);
-var authenticationOptions = new Authentication();
+var jwtOptions = new JWTOptions();
+builder.Configuration.Bind("JWT", jwtOptions);
+var authenticationOptions = new AuthenticationOptions();
 builder.Configuration.Bind("Authentication", authenticationOptions);
-var authenticationClientOptions = new AuthenticationClient();
+var authenticationClientOptions = new AuthenticationClientOptions();
 builder.Configuration.Bind("Authentication:Client", authenticationClientOptions);
 builder.Services.AddAuthentication("Bearer")
     .AddJwtBearer(options =>
@@ -29,7 +29,7 @@ builder.Services.AddAuthentication("Bearer")
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.Key)),
             ValidateIssuer = true,
             ValidIssuer = authenticationOptions.Issuer,
             ValidateAudience = false,

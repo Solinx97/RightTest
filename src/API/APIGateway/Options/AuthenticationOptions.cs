@@ -1,6 +1,6 @@
-﻿namespace APIGateway.Consts;
+﻿namespace APIGateway.Options;
 
-internal class Authentication
+internal class AuthenticationOptions
 {
     public string Issuer { get; set; } = string.Empty;
 

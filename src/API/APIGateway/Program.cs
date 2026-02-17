@@ -1,4 +1,3 @@
-using APIGateway.Consts;
 using APIGateway.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -16,9 +15,9 @@ builder.Services.AddReverseProxy()
 
 var jwtOptions = new JWTOptions();
 builder.Configuration.Bind("JWT", jwtOptions);
-var authenticationOptions = new Authentication();
+var authenticationOptions = new AuthenticationOptions();
 builder.Configuration.Bind("Authentication", authenticationOptions);
-var authenticationClientOptions = new AuthenticationClient();
+var authenticationClientOptions = new AuthenticationClientOptions();
 builder.Configuration.Bind("Authentication:Client", authenticationClientOptions);
 var audiences = authenticationClientOptions.Audiences.Split(',');
 builder.Services.AddAuthentication("Bearer")

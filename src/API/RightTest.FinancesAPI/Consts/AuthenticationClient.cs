@@ -1,6 +1,0 @@
-﻿namespace RightTest.FinancesAPI.Consts;
-
-internal class AuthenticationClient
-{
-    public string Scopes { get; set; } = string.Empty;
-}

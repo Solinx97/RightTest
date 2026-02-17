@@ -33,48 +33,17 @@ currency
 
 # Как запустить
 ### Предварительная подготовка
-1) Postgresql БД должна быть установлена локально или скачан Docker Image (например, my-postgres) и запущен необходимый Docker Container.
+1) Необходимо установить и запустить Docker.
 
 ### Работа с Решением
 1) Клонировать Репо
-2) Создать .Net User Secrets или appsettings.json файл (формат может отличаться от User Secrets). Заполнить следующим образом:
-    - для APIGateway
-    {
-        "ConnectionStrings:FinancesConnection": "your-connection-string-to-Postgresql-finances-db",
-        "ConnectionStrings:UsersConnection": "your-connection-string-to-Postgresql-users-db",
-        "JWT:Key": "your-jwt-secure-key",
-        "Authentication:Issuer": "url-who-issue-jwt: https://localhost:7189/",
-        "Authentication:Authority": "url-who-jwt-author: https://localhost:7189/",
-        "Authentication:Client:Audiences": "finances-api,user-api",
-        "Authentication:Client:Scopes": "api.read,api.write"
-    }
-    - для RightTest.FinancesAPI
-    {
-        "ConnectionStrings:DefaultConnection": "your-connection-string-to-Postgresql-finances-db,
-        "JWT:Key": "your-jwt-secure-key",
-        "Authentication:Issuer": "url-who-issue-jwt: https://localhost:7189/",
-        "Authentication:Client:Scopes": "api.read,api.write"
-    }
-    - для RightTest.UsersAPI
-    {
-        "ConnectionStrings:DefaultConnection": "your-connection-string-to-Postgresql-users-db",
-        "JWT:Key": "your-jwt-secure-key",
-        "JWT:Issuer": "url-who-issue-jwt: https://localhost:7189/",
-        "JWT:Audiences": "finances-api",
-        "JWT:Scopes": "api.read,api.write",
-        "JWT:ValidHours": "24"
-    }
-    - для RightTest.MigrationsAPI
-    {
-        "ConnectionStrings:FinancesConnection": "your-connection-string-to-Postgresql-finances-db",
-        "ConnectionStrings:UsersConnection": "your-connection-string-to-Postgresql-users-db",
-    }
-    - для RightTest.UsersBL.IntegrationTests (TESTS)
-    {
-        "JWT:Key": "your-jwt-secure-key",
-    }
-3) Собрать Решение (Solution)
-4) Запустить интересующие Проекты (или все проекты)
+2) Создать .env файл (в корне Solution) для хранения секретов локально. Заполнить следующим образом:
+    JWT_KEY=<your-jwt-key>
+    ConnectionStrings__FinancesConnection=<your-connection-string-to-finances-db>
+    ConnectionStrings__UsersConnection=<your-connection-string-to-users-db>
+    DB__PASSWORD=<db-password>
+3) Собрать docker-compose и запустить
+4) Выполнить Миграции (запросы к MigrationAPI) для создания Таблиц и Связей для Finances и Users bd.
 5) Выполнить запросы черзез Swagger или Requests app (например, Postman)
 
 # Запуск тестов

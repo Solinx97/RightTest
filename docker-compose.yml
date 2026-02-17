@@ -13,6 +13,8 @@ services:
       Authentication__Client__Scopes: api.read,api.write
       Authentication__Client__Audiences: finances-api,user-api
       Authentication__Authority: http://usersapi:8080/
+      ReverseProxy__Clusters__userServiceCluster__Destinations__userService__Address: http://usersapi:8080/
+      ReverseProxy__Clusters__financesServiceCluster__Destinations__financesService__Address: http://financesapi:8080/
     depends_on:
       - financesapi
       - usersapi
@@ -32,6 +34,7 @@ services:
       JWT__Key: ${JWT_KEY}
       Authentication__Issuer: http://usersapi:8080/
       Authentication__Client__Scopes: api.read,api.write
+      Servers__ExternalServerUrl: http://www.cbr.ru/scripts/XML_daily.asp
     depends_on:
       - db
 

@@ -1,6 +1,6 @@
-﻿namespace APIGateway.Consts;
+﻿namespace APIGateway.Options;
 
-internal class AuthenticationClient
+internal class AuthenticationClientOptions
 {
     public string Audiences { get; set; } = string.Empty;
 
