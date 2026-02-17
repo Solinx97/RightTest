@@ -1,0 +1,6 @@
+@RightTest.UsersAPI_HostAddress = http://localhost:5157
+
+GET {{RightTest.UsersAPI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
